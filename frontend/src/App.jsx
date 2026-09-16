@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route,  Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
 import { useAuth } from "./context/useAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -50,7 +50,7 @@ const HomeRoute = () => {
 };
 
 const App = () => {
-    
+
     return (
         <BrowserRouter>
             <AuthProvider>
@@ -130,12 +130,17 @@ const App = () => {
                         />
 
                         <Route
+                            path="/recruiter/jobs/:id"
+                            element={<JobDetails />}
+                        />
+
+                        <Route
                             path="/recruiter/applicants/:jobId"
                             element={<Applicants />}
                         />
                     </Route>
 
-          
+
 
                     {/* 404 */}
                     <Route

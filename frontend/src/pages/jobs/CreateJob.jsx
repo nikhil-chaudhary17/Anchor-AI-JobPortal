@@ -28,6 +28,7 @@ export default function CreateJob() {
     const [companyId, setCompanyId] = useState(null);
     const [loadingCompany, setLoadingCompany] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [generatingDescription, setGeneratingDescription] = useState(false);
 
     const navigate = useNavigate();
     const { id } = useParams();
@@ -47,24 +48,21 @@ export default function CreateJob() {
         }));
     };
 
-    const addSkill = (e) => {
-        if (e.key !== "Enter") return;
-
-        e.preventDefault();
-
-        const skill = skillInput.trim();
+    const addSkill = (input) => {
+        const skill = input.trim();
 
         if (!skill) return;
 
-        if (formData.skills.includes(skill)) {
-            setSkillInput("");
-            return;
-        }
+        setFormData((prev) => {
+            if (prev.skills.includes(skill)) {
+                return prev;
+            }
 
-        setFormData((prev) => ({
-            ...prev,
-            skills: [...prev.skills, skill],
-        }));
+            return {
+                ...prev,
+                skills: [...prev.skills, skill],
+            };
+        });
 
         setSkillInput("");
     };
@@ -234,6 +232,9 @@ export default function CreateJob() {
 
 
         try {
+
+            setGeneratingDescription(true);
+
             const res = await api.post("/ai/generate-job-description", {
                 title: formData.title,
                 keyPoints: formData.skills.join(", "),
@@ -256,6 +257,8 @@ export default function CreateJob() {
                 "Failed to generate job description."
             );
 
+        } finally {
+            setGeneratingDescription(false);
         }
 
     };
@@ -442,16 +445,29 @@ export default function CreateJob() {
                                     Required skills
                                 </label>
 
-                                <input
-                                    type="text"
-                                    value={skillInput}
-                                    onChange={(e) =>
-                                        setSkillInput(e.target.value)
-                                    }
-                                    onKeyDown={addSkill}
-                                    placeholder="Type a skill and press Enter"
-                                    className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#18182A] px-4 py-3 text-sm text-[#F5F3FF] outline-none placeholder:text-[#5F6178] focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6]"
-                                />
+                                <div className="mt-1.5 flex items-center gap-2">
+                                    <input
+                                        type="text"
+                                        value={skillInput}
+                                        onChange={(e) => setSkillInput(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                e.preventDefault();
+                                                addSkill(skillInput);
+                                            }
+                                        }}
+                                        placeholder="Type a skill..."
+                                        className="min-w-0 flex-1 rounded-lg border border-white/10 bg-[#18182A] px-4 py-3 text-sm text-[#F5F3FF] outline-none placeholder:text-[#5F6178] focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6]"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() => addSkill(skillInput)}
+                                        className="shrink-0 rounded-lg bg-[#8B5CF6] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#7C3AED]"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
 
                                 {/* Skill Tags */}
                                 {formData.skills.length > 0 && (
@@ -465,9 +481,7 @@ export default function CreateJob() {
 
                                                 <button
                                                     type="button"
-                                                    onClick={() =>
-                                                        removeSkill(skill)
-                                                    }
+                                                    onClick={() => removeSkill(skill)}
                                                     className="transition-colors hover:text-white"
                                                 >
                                                     <X size={13} />
@@ -505,7 +519,7 @@ export default function CreateJob() {
                                 className="flex w-fit items-center gap-2 rounded-lg border border-[#A78BFA]/30 bg-[#8B5CF6]/10 px-4 py-2.5 text-xs font-semibold text-[#C4B5FD] transition-all hover:border-[#A78BFA]/60 hover:bg-[#8B5CF6]/20"
                             >
                                 <Sparkles size={15} />
-                                Generate with AI
+                                {generatingDescription ? "Generating..." : " Generate with AI"}
                             </button>
                         </div>
 

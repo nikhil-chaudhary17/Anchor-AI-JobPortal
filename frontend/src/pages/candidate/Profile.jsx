@@ -60,21 +60,23 @@ export default function Profile() {
     });
   };
 
-  const addSkill = (e) => {
-    if (e.key === "Enter" && e.target.value.trim()) {
-      e.preventDefault();
 
-      const newSkill = e.target.value.trim();
+  const addSkill = (input) => {
+    const newSkill = input.trim();
 
-      setFormData((prev) => ({
+    if (!newSkill) return;
+
+    setFormData((prev) => {
+      if (prev.skills.includes(newSkill)) {
+        return prev;
+      }
+
+      return {
         ...prev,
         skills: [...prev.skills, newSkill],
-      }));
-
-      e.target.value = "";
-    }
+      };
+    });
   };
-
 
   const removeSkill = (skillToRemove) => {
     setFormData({
@@ -259,7 +261,7 @@ export default function Profile() {
               </label>
 
               <div className="mt-1.5 flex flex-wrap gap-2 rounded-md border border-white/10 bg-white/5 p-3">
-                {(editing ? formData.skills : user.skills || []).map((skill) => (
+                {(editing ? formData.skills : user?.skills || []).map((skill) => (
                   <span
                     key={skill}
                     className="flex items-center gap-1.5 rounded-md bg-white/10 px-2.5 py-1 text-xs text-paper"
@@ -268,8 +270,8 @@ export default function Profile() {
 
                     {editing && (
                       <button
-                        className="text-[#7A81A0] hover:text-paper"
                         type="button"
+                        className="text-[#7A81A0] hover:text-paper"
                         onClick={() => removeSkill(skill)}
                       >
                         ×
@@ -279,14 +281,37 @@ export default function Profile() {
                 ))}
 
                 {editing && (
-                  <input
-                    type="text"
-                    placeholder="Add a skill..."
-                    name="skill"
-                    onKeyDown={addSkill}
-                    disabled={!editing}
-                    className="min-w-25 flex-1 bg-transparent text-xs text-paper outline-none placeholder:text-[#7A81A0]"
-                  />
+                  <div className="flex min-w-full flex-1 items-center gap-2 sm:min-w-25">
+                    <input
+                      type="text"
+                      placeholder="Add a skill..."
+                      name="skill"
+                      disabled={!editing}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+
+                          addSkill(e.target.value);
+                          e.target.value = "";
+                        }
+                      }}
+                      className="min-w-0 flex-1 bg-transparent text-xs text-paper outline-none placeholder:text-[#7A81A0]"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        const input = e.currentTarget.previousElementSibling;
+
+                        addSkill(input.value);
+                        input.value = "";
+                        input.focus();
+                      }}
+                      className="shrink-0 rounded-md bg-amber px-3 py-1.5 text-xs font-semibold text-navy transition-colors hover:bg-amber/90"
+                    >
+                      Add
+                    </button>
+                  </div>
                 )}
               </div>
 
