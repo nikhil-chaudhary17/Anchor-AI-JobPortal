@@ -152,7 +152,7 @@ export default function Applicants() {
 
                 {/* Loading */}
                 {loading && (
-                    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-10 text-center">
+                    <div className="rounded-xl border border-white/10 bg-white/3 p-10 text-center">
                         <Loader2
                             size={26}
                             className="mx-auto animate-spin text-mint"
@@ -188,7 +188,7 @@ export default function Applicants() {
 
                 {/* Empty */}
                 {!loading && !error && applications.length === 0 && (
-                    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-12 text-center">
+                    <div className="rounded-xl border border-white/10 bg-white/3 p-12 text-center">
                         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/5">
                             <User size={25} className="text-[#626A80]" />
                         </div>
@@ -226,7 +226,7 @@ export default function Applicants() {
                                 return (
                                     <article
                                         key={application._id}
-                                        className="rounded-xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-white/15"
+                                        className="rounded-xl border border-white/10 bg-white/3 p-5 transition hover:border-white/15"
                                     >
                                         {/* Top */}
                                         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
