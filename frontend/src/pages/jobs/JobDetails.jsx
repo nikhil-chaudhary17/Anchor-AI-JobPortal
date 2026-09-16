@@ -352,14 +352,14 @@ export default function JobDetails() {
                                         ) : myApplication ? (
                                             <div
                                                 className={`flex items-center gap-2 rounded-lg border px-4 py-2.5 ${myApplication.status === "Applied"
-                                                        ? "border-blue-400/20 bg-blue-400/10"
-                                                        : myApplication.status === "Shortlisted"
-                                                            ? "border-amber-400/20 bg-amber-400/10"
-                                                            : myApplication.status === "Hired"
-                                                                ? "border-mint/20 bg-mint/10"
-                                                                : myApplication.status === "Rejected"
-                                                                    ? "border-red-400/20 bg-red-400/10"
-                                                                    : "border-white/10 bg-white/5"
+                                                    ? "border-blue-400/20 bg-blue-400/10"
+                                                    : myApplication.status === "Shortlisted"
+                                                        ? "border-amber-400/20 bg-amber-400/10"
+                                                        : myApplication.status === "Hired"
+                                                            ? "border-mint/20 bg-mint/10"
+                                                            : myApplication.status === "Rejected"
+                                                                ? "border-red-400/20 bg-red-400/10"
+                                                                : "border-white/10 bg-white/5"
                                                     }`}
                                             >
                                                 <CheckCircle2
@@ -384,14 +384,14 @@ export default function JobDetails() {
 
                                                     <p
                                                         className={`text-sm font-medium ${myApplication.status === "Applied"
-                                                                ? "text-blue-400"
-                                                                : myApplication.status === "Shortlisted"
-                                                                    ? "text-amber-400"
-                                                                    : myApplication.status === "Hired"
-                                                                        ? "text-mint"
-                                                                        : myApplication.status === "Rejected"
-                                                                            ? "text-red-400"
-                                                                            : "text-[#9CA3AF]"
+                                                            ? "text-blue-400"
+                                                            : myApplication.status === "Shortlisted"
+                                                                ? "text-amber-400"
+                                                                : myApplication.status === "Hired"
+                                                                    ? "text-mint"
+                                                                    : myApplication.status === "Rejected"
+                                                                        ? "text-red-400"
+                                                                        : "text-[#9CA3AF]"
                                                             }`}
                                                     >
                                                         {myApplication.status}
@@ -689,12 +689,21 @@ export default function JobDetails() {
 
                                 <button
                                     type="button"
-                                    className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-2.5 text-sm font-medium text-[#D1D5DB] transition hover:border-[#8B5CF6]/40 hover:text-white"
+                                    disabled={!job.company?.website}
+                                    onClick={() => {
+                                        if (!job.company?.website) return;
+
+                                        const website = job.company.website.startsWith("http")
+                                            ? job.company.website
+                                            : `https://${job.company.website}`;
+
+                                        window.open(website, "_blank", "noopener,noreferrer");
+                                    }}
+                                    className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-2.5 text-sm font-medium text-[#D1D5DB] transition hover:border-[#8B5CF6]/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                                 >
                                     <Globe size={16} />
                                     Visit company
                                 </button>
-
                             </section>
 
                         </aside>
