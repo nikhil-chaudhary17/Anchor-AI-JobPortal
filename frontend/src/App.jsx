@@ -125,6 +125,11 @@ const App = () => {
                         />
 
                         <Route
+                            path="/recruiter/post-job/edit/:id"
+                            element={<CreateJob />}
+                        />
+
+                        <Route
                             path="/recruiter/my-jobs"
                             element={<MyJobs />}
                         />
